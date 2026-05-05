@@ -1,9 +1,11 @@
+import json
 import streamlit as st
 import time
 import librosa
 import io
 import tempfile
 import numpy as np
+import keras
 
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
@@ -23,6 +25,9 @@ def repeat_matrices(mel,target=431):
         repeats = int(np.ceil(target / mel.shape[1]))
         mel = np.tile(mel,(1,repeats))
     return mel[:, :target]
+
+path_json = "json_info"
+path_model = "modele.keras"
 
 if "progression" not in st.session_state:
     st.session_state.progression = False
@@ -96,10 +101,17 @@ if st.session_state.progression:
     audio_transform = st.session_state.audio.getvalue()
     audio_buffer = io.BytesIO(audio_transform)
 
-    uniforme = repeat_matrices(spectrogram_matrice(audio_buffer))
+    matrice_verif = spectrogram_matrice(audio_buffer)
     time.sleep(0.8)
     progress_bar.progress(10)
     # Insérer l'intégration du modèle ici éventuellement
+    model_test_after_training = keras.models.load_model(path_model)
+    matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
+    prediction = model_test_after_training.predict(matrice_verif,verbose=0)
+    pred_class = prediction.argmax()
+    with open(f"{path_json}Classes_To_True.json", "r") as f:
+        infos = json.load(f)
+    print(infos[str(pred_class)])
     st.session_state.oiseau = "Colibri" # À modifier pour le renvoi du modèle
     progress_bar.progress(90)
     st.session_state.progression = False
