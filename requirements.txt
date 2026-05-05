@@ -1,3 +1,4 @@
 streamlit
 librosa
 keras
+tensorflow
