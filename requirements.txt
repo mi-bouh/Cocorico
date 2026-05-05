@@ -1,4 +1,4 @@
 streamlit
-librosa
-keras==2.12.0
 tensorflow-cpu==2.12.0
+keras==2.12.0
+librosa
