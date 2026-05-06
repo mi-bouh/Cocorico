@@ -137,17 +137,44 @@ if st.session_state.resultat:
         st.rerun()
 
 import requests
-# 1. On définit la partie de l'app à rafraîchir automatiquement
-@st.fragment(run_every="30s") # Se rafraîchit toutes les 30 secondes
-def display_live_score():
-   # Appel à l'API (ex: NHL API)
-   url = "https://nhle.com"
-   data = requests.get(url).json()
-   # Extraction simplifiée du score pour l'exemple
-   # (Logique de filtrage pour les Canadiens de Montréal à ajouter ici)
-   score_display = "MTL 2 - 1 BUF (En cours)"
-   st.metric(label="Match en direct", value=score_display)
-   st.caption("Dernière mise à jour : " + st.datetime.now().strftime("%H:%M:%S"))
-# 2. On appelle la fonction dans l'app principale
-st.title("Tableau de bord Hockey")
-display_live_score()
+def get_live_nhl_score():
+   try:
+       url = "https://api-web.nhle.com/v1/score/now"
+       response = requests.get(url)
+       data = response.json()
+       for game in data.get('games', []):
+           away = game['awayTeam']['abbrev']
+           home = game['homeTeam']['abbrev']
+           if (away == 'MTL' and home == 'BUF') or (away == 'BUF' and home == 'MTL'):
+               return {
+                   "away": away, "home": home,
+                   "score_away": game['awayTeam'].get('score', 0),
+                   "score_home": game['homeTeam'].get('score', 0),
+                   "status": game.get('gameState'),
+                   "period": game.get('periodDescriptor', {}).get('number', 0),
+                   "clock": game.get('clock', {}).get('timeRemaining', "19:00")
+               }
+   except:
+       return None
+st.title("Mon Dashboard Streamlit")
+# 1. On crée un conteneur vide pour le score
+score_placeholder = st.empty()
+# 2. Boucle de rafraîchissement
+while True:
+   game_data = get_live_nhl_score()
+   # On utilise le 'with score_placeholder' pour remplacer le contenu à chaque boucle
+   with score_placeholder.container():
+       st.subheader("🏒 Score en direct : MTL vs BUF")
+       if game_data:
+           col1, col2, col3 = st.columns(3)
+           col1.metric(game_data['away'], game_data['score_away'])
+           if game_data['status'] == 'LIVE':
+               col2.write(f"**Période {game_data['period']}**")
+               col2.write(f"⏱️ {game_data['clock']}")
+           else:
+               col2.write("En attente...")
+           col3.metric(game_data['home'], game_data['score_home'])
+       else:
+           st.write("Match non trouvé pour le moment.")
+   # 3. Pause de 30 secondes avant la prochaine requête
+   time.sleep(30)
