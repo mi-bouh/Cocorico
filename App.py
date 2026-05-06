@@ -7,16 +7,6 @@ import tempfile
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
-import os
-
-chemin_modele = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meilleur_modele.keras")
-
-st.warning(f"Chemin cherché : {chemin_modele}")
-st.warning(f"Le fichier existe-t-il selon Python ? {os.path.exists(chemin_modele)}")
-
-if os.path.exists(chemin_modele):
-    taille_mb = os.path.getsize(chemin_modele) / (1024 * 1024)
-    st.info(f"Taille du fichier vue par Streamlit : {taille_mb:.2f} MB")
 
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
@@ -54,7 +44,7 @@ if "format" not in st.session_state:
 
 url_modele = "https://github.com/mi-bouh/Cocorico/releases/download/Oui/meilleur_modele.keras"
 chemin_modele = tf.keras.utils.get_file("meilleur_modele.keras", origin=url_modele)
-model = load_model(chemin_modele)
+model = load_model(chemin_modele, compile=False)
 path_json = "json_info"
 
 # À la réinitialisation de l'application
