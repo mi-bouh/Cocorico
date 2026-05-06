@@ -156,7 +156,7 @@ def get_live_nhl_score():
                }
    except:
        return None
-st.title("Mon Dashboard Streamlit")
+st.title("ET OUI, ON A LA GAME :)")
 # 1. On crée un conteneur vide pour le score
 score_placeholder = st.empty()
 # 2. Boucle de rafraîchissement
