@@ -44,7 +44,7 @@ if "init" not in st.session_state:
     st.session_state.init = False
 
 path_json = "json_info"
-model_test_after_training = keras.models.load_model("modele.keras")
+model_test_after_training = keras.models.load_model("meilleur_modele.keras")
 
 # À la réinitialisation de l'application
 if st.session_state.nouveau:
