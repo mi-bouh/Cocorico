@@ -5,17 +5,9 @@ import librosa
 import io
 import tempfile
 import numpy as np
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 import os
-
-chemin_modele = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meilleur_modele.keras")
-
-st.warning(f"Chemin cherché : {chemin_modele}")
-st.warning(f"Le fichier existe-t-il selon Python ? {os.path.exists(chemin_modele)}")
-
-if os.path.exists(chemin_modele):
-    taille_mb = os.path.getsize(chemin_modele) / (1024 * 1024)
-    st.info(f"Taille du fichier vue par Streamlit : {taille_mb:.2f} MB")
 
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
@@ -51,15 +43,10 @@ if "duration" not in st.session_state:
 if "format" not in st.session_state:
     st.session_state.format = ""
 
-path_json = "json_info"
-# 1. Obtenir le chemin absolu du dossier où se trouve ce script
-dossier_actuel = os.path.dirname(os.path.abspath(__file__))
-
-# 2. Construire le chemin complet vers modele.keras
-chemin_modele = os.path.join(dossier_actuel, "meilleur_modele.keras")
-
-# 3. Charger le modèle avec ce chemin absolu
+url_modele = "https://github.com/mi-bouh/Cocorico/releases/download/Oui/meilleur_modele.keras"
+chemin_modele = tf.keras.utils.get_file("meilleur_modele.keras", origin=url_modele)
 model = load_model(chemin_modele)
+path_json = "json_info"
 
 # À la réinitialisation de l'application
 if st.session_state.nouveau:
@@ -123,7 +110,7 @@ if st.session_state.progression:
     progress_bar.progress(10)
     # Insérer l'intégration du modèle ici éventuellement
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
-    prediction = model_test_after_training.predict(matrice_verif,verbose=0)
+    prediction = model.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
     with open(f"{path_json}Classes_To_True.json", "r") as f:
         infos = json.load(f)
