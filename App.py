@@ -107,14 +107,14 @@ if st.session_state.progression:
     matrice_verif = spectrogram_matrice(audio_buffer)
     time.sleep(0.8)
     progress_bar.progress(10)
-    # Insérer l'intégration du modèle ici éventuellement
+    
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
     prediction = model.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
     with open(f"{path_json}/Classes_To_True.json", "r") as f:
         infos = json.load(f)
-    print(infos[str(pred_class)])
-    st.session_state.oiseau = "Colibri" # À modifier pour le renvoi du modèle
+
+    st.session_state.oiseau = infos[str(pred_class)]
     progress_bar.progress(90)
     st.session_state.progression = False
     st.session_state.resultat = True
