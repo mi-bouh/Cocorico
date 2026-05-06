@@ -8,7 +8,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import os
 
-chemin_modele = os.path.join(os.path.dirname(os.path.abspath(__file__)), "modele.keras")
+chemin_modele = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meilleur_modele.keras")
 
 st.warning(f"Chemin cherché : {chemin_modele}")
 st.warning(f"Le fichier existe-t-il selon Python ? {os.path.exists(chemin_modele)}")
