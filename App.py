@@ -160,21 +160,19 @@ st.title("ET OUI, ON A LA GAME :)")
 # 1. On crée un conteneur vide pour le score
 score_placeholder = st.empty()
 # 2. Boucle de rafraîchissement
-while True:
-   game_data = get_live_nhl_score()
-   # On utilise le 'with score_placeholder' pour remplacer le contenu à chaque boucle
-   with score_placeholder.container():
-       st.subheader("🏒 Score en direct : MTL vs BUF")
-       if game_data:
-           col1, col2, col3 = st.columns(3)
-           col1.metric(game_data['away'], game_data['score_away'])
-           if game_data['status'] == 'LIVE':
-               col2.write(f"**Période {game_data['period']}**")
-               col2.write(f"⏱️ {game_data['clock']}")
-           else:
-               col2.write("En attente...")
-           col3.metric(game_data['home'], game_data['score_home'])
+
+game_data = get_live_nhl_score()
+# On utilise le 'with score_placeholder' pour remplacer le contenu à chaque boucle
+with score_placeholder.container():
+   st.subheader("🏒 Score en direct : MTL vs BUF")
+   if game_data:
+       col1, col2, col3 = st.columns(3)
+       col1.metric(game_data['away'], game_data['score_away'])
+       if game_data['status'] == 'LIVE':
+           col2.write(f"**Période {game_data['period']}**")
+           col2.write(f"⏱️ {game_data['clock']}")
        else:
-           st.write("Match non trouvé pour le moment.")
-   # 3. Pause de 30 secondes avant la prochaine requête
-   time.sleep(30)
+           col2.write("En attente...")
+       col3.metric(game_data['home'], game_data['score_home'])
+   else:
+       st.write("Match non trouvé pour le moment.")
