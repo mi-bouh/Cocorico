@@ -5,7 +5,7 @@ import librosa
 import io
 import tempfile
 import numpy as np
-from tensorflow.keras.models import load_model
+import keras
 
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
@@ -45,7 +45,7 @@ if "init" not in st.session_state:
 
 if st.session_state.init:
     path_json = "json_info"
-    model_test_after_training = load_model("modele.keras")
+    model_test_after_training = keras.models.load_model("modele.keras")
     st.session_state.init = True
 
 # À la réinitialisation de l'application
