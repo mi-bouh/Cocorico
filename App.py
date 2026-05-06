@@ -43,10 +43,8 @@ if "format" not in st.session_state:
 if "init" not in st.session_state:
     st.session_state.init = False
 
-if st.session_state.init:
-    path_json = "json_info"
-    model_test_after_training = keras.models.load_model("modele.keras")
-    st.session_state.init = True
+path_json = "json_info"
+model_test_after_training = keras.models.load_model("modele.keras")
 
 # À la réinitialisation de l'application
 if st.session_state.nouveau:
