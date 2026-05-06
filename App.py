@@ -5,7 +5,8 @@ import librosa
 import io
 import tempfile
 import numpy as np
-import keras
+from tensorflow.keras.models import load_model
+import os
 
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
@@ -40,11 +41,16 @@ if "duration" not in st.session_state:
     st.session_state.duration = 0
 if "format" not in st.session_state:
     st.session_state.format = ""
-if "init" not in st.session_state:
-    st.session_state.init = False
 
 path_json = "json_info"
-model_test_after_training = keras.models.load_model("meilleur_modele.keras")
+# 1. Obtenir le chemin absolu du dossier où se trouve ce script
+dossier_actuel = os.path.dirname(os.path.abspath(__file__))
+
+# 2. Construire le chemin complet vers modele.keras
+chemin_modele = os.path.join(dossier_actuel, "meilleur_modele.keras")
+
+# 3. Charger le modèle avec ce chemin absolu
+model = load_model(chemin_modele)
 
 # À la réinitialisation de l'application
 if st.session_state.nouveau:
