@@ -9,6 +9,15 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 import os
 
+chemin_modele = os.path.join(os.path.dirname(os.path.abspath(__file__)), "meilleur_modele.keras")
+
+st.warning(f"Chemin cherché : {chemin_modele}")
+st.warning(f"Le fichier existe-t-il selon Python ? {os.path.exists(chemin_modele)}")
+
+if os.path.exists(chemin_modele):
+    taille_mb = os.path.getsize(chemin_modele) / (1024 * 1024)
+    st.info(f"Taille du fichier vue par Streamlit : {taille_mb:.2f} MB")
+
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
         y, sr = librosa.load(file_in,sr=22050,duration=10)
