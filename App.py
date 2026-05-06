@@ -5,7 +5,7 @@ import librosa
 import io
 import tempfile
 import numpy as np
-import keras
+from tensorflow.keras.models import load_model
 
 def spectrogram_matrice(file_in,numbers_of_bins=128):
     try:
@@ -26,9 +26,6 @@ def repeat_matrices(mel,target=431):
         mel = np.tile(mel,(1,repeats))
     return mel[:, :target]
 
-path_json = "json_info"
-path_model = "modele.keras"
-
 if "progression" not in st.session_state:
     st.session_state.progression = False
 if "resultat" not in st.session_state:
@@ -43,6 +40,13 @@ if "duration" not in st.session_state:
     st.session_state.duration = 0
 if "format" not in st.session_state:
     st.session_state.format = ""
+if "init" not in st.session_state:
+    st.session_state.init = False
+
+if st.session_state.init:
+    path_json = "json_info"
+    model_test_after_training = load_model("modele.keras")
+    st.session_state.init = True
 
 # À la réinitialisation de l'application
 if st.session_state.nouveau:
@@ -105,7 +109,6 @@ if st.session_state.progression:
     time.sleep(0.8)
     progress_bar.progress(10)
     # Insérer l'intégration du modèle ici éventuellement
-    model_test_after_training = keras.models.load_model(path_model)
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
     prediction = model_test_after_training.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
