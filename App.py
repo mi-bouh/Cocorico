@@ -101,14 +101,17 @@ if st.session_state.progression:
     # y, sr = librosa.load(st.session_state.audio)
     # st.session_state.duration = librosa.get_duration(y=y, sr=sr)
 
+    progress_bar.progress(20)
+
     audio_transform = st.session_state.audio.getvalue()
     audio_buffer = io.BytesIO(audio_transform)
 
     matrice_verif = spectrogram_matrice(audio_buffer)
     time.sleep(0.8)
-    progress_bar.progress(10)
+    progress_bar.progress(50)
 
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
+    progress_bar.progress(60)
     prediction = model.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
     with open(f"{path_json}/Classes_To_True.json", "r") as f:
