@@ -135,3 +135,19 @@ if st.session_state.resultat:
     if reset:
         st.session_state.nouveau = True
         st.rerun()
+
+import requests
+# 1. On définit la partie de l'app à rafraîchir automatiquement
+@st.fragment(run_every="30s") # Se rafraîchit toutes les 30 secondes
+def display_live_score():
+   # Appel à l'API (ex: NHL API)
+   url = "https://nhle.com"
+   data = requests.get(url).json()
+   # Extraction simplifiée du score pour l'exemple
+   # (Logique de filtrage pour les Canadiens de Montréal à ajouter ici)
+   score_display = "MTL 2 - 1 BUF (En cours)"
+   st.metric(label="Match en direct", value=score_display)
+   st.caption("Dernière mise à jour : " + st.datetime.now().strftime("%H:%M:%S"))
+# 2. On appelle la fonction dans l'app principale
+st.title("Tableau de bord Hockey")
+display_live_score()
