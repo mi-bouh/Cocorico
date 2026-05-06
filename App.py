@@ -41,10 +41,13 @@ if "duration" not in st.session_state:
     st.session_state.duration = 0
 if "format" not in st.session_state:
     st.session_state.format = ""
+if "modele" not in st.session_state:
+    st.session_state.modele = None
 
-url_modele = "https://github.com/mi-bouh/Cocorico/releases/download/Oui/meilleur_modele.keras"
-chemin_modele = tf.keras.utils.get_file("meilleur_modele.keras", origin=url_modele)
-model = load_model(chemin_modele, compile=False)
+if st.session_state.modele == None:
+    url_modele = "https://github.com/mi-bouh/Cocorico/releases/download/Oui/meilleur_modele.keras"
+    chemin_modele = tf.keras.utils.get_file("meilleur_modele.keras", origin=url_modele)
+    st.session_state.modele = load_model(chemin_modele, compile=False)
 path_json = "json_info"
 
 # À la réinitialisation de l'application
@@ -112,7 +115,7 @@ if st.session_state.progression:
 
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
     progress_bar.progress(60)
-    prediction = model.predict(matrice_verif,verbose=0)
+    prediction = st.session_state.modele.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
     with open(f"{path_json}/Classes_To_True.json", "r") as f:
         infos = json.load(f)
