@@ -111,7 +111,7 @@ if st.session_state.progression:
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
     prediction = model.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
-    with open(f"{path_json}Classes_To_True.json", "r") as f:
+    with open(f"{path_json}/Classes_To_True.json", "r") as f:
         infos = json.load(f)
     print(infos[str(pred_class)])
     st.session_state.oiseau = "Colibri" # À modifier pour le renvoi du modèle
