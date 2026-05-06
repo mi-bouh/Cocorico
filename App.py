@@ -98,8 +98,8 @@ if st.session_state.progression:
             tmp_file.write(st.session_state.audio.getvalue())
             st.session_state.audio = tmp_file.name
 
-    y, sr = librosa.load(st.session_state.audio)
-    st.session_state.duration = librosa.get_duration(y=y, sr=sr)
+    # y, sr = librosa.load(st.session_state.audio)
+    # st.session_state.duration = librosa.get_duration(y=y, sr=sr)
 
     audio_transform = st.session_state.audio.getvalue()
     audio_buffer = io.BytesIO(audio_transform)
@@ -107,7 +107,7 @@ if st.session_state.progression:
     matrice_verif = spectrogram_matrice(audio_buffer)
     time.sleep(0.8)
     progress_bar.progress(10)
-    
+
     matrice_verif = matrice_verif.reshape((1,*matrice_verif.shape,1))
     prediction = model.predict(matrice_verif,verbose=0)
     pred_class = prediction.argmax()
@@ -124,7 +124,7 @@ if st.session_state.progression:
 
 if st.session_state.resultat:
     st.write(f"L'espèce d'oiseau détectée est : {st.session_state.oiseau}")
-    st.write(f"L'enregistrement avait une durée de {st.session_state.duration} secondes")
+    # st.write(f"L'enregistrement avait une durée de {st.session_state.duration} secondes")
     reset = st.button("Détecter un nouvel oiseau")
     if reset:
         st.session_state.nouveau = True
